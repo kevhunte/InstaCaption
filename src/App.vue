@@ -13,7 +13,8 @@
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
           <b-nav-item to="/about">About</b-nav-item>
-          <b-nav-item href="#" :disabled="!this.isAuthenticated">Captions<b-icon-lock v-if="!this.isAuthenticated"></b-icon-lock>
+          <!--Put a nav guard on this route when it is created-->
+          <b-nav-item href="#" :disabled="!this.$store.getters.isAuthenticated">Captions<b-icon-lock v-if="!this.$store.getters.isAuthenticated"></b-icon-lock>
           </b-nav-item>
         </b-navbar-nav>
 
@@ -28,8 +29,8 @@
                 <b-icon-list></b-icon-list>
               </h5>
             </template>
-            <b-dropdown-item v-if="!this.isAuthenticated">Login</b-dropdown-item>
-            <b-dropdown-item v-if="this.isAuthenticated">Sign Out</b-dropdown-item>
+            <b-dropdown-item v-if="!this.$store.getters.isAuthenticated" @click.prevent="login">Login</b-dropdown-item>
+            <b-dropdown-item @click.prevent="logout">Sign Out</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -48,12 +49,31 @@ export default {
   name: 'app',
   data() {
     return {
-      isAuthenticated: false
+      //isAuthenticated: false
     }
   },
   components: {
     BIconList,
     BIconLock
+  },
+  created() {
+    console.log(this.$auth.isAuthenticated());
+    //this.$store.commit('updateAuth', this.$auth.isAuthenticated());
+  },
+  methods: {
+    login() {
+      this.$auth.login();
+      console.log("Signed In");
+    },
+    logout() {
+      this.$auth.logout();
+      console.log("Signed Out!");
+    }
+    /*,
+        handleLoginEvent(data) {
+          this.$store.commit('updateAuth', this.$auth.isAuthenticated());
+          this.profile = data.profile;
+        }*/
   }
 }
 </script>
@@ -72,9 +92,9 @@ export default {
   padding-bottom: 10px;
 }
 
-.dropdown:hover .dropdown-menu {
+/*.dropdown:hover .dropdown-menu {
   display: block;
-}
+}*/
 
 .dropdown-toggle:after {
   content: none

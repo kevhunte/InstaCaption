@@ -1,7 +1,9 @@
 <template>
 <div class="home">
   <h1>Home Page</h1>
-
+  <a v-if="$store.getters.profile">
+    Hi {{$store.getters.profile.name}}
+  </a>
   <h2> Add the carousel here</h2>
   <h2> A blurb about the site</h2>
   <h2> Clarify that this is hiphop heavy</h2>
