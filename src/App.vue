@@ -14,23 +14,24 @@
         <b-navbar-nav>
           <b-nav-item to="/about">About</b-nav-item>
           <!--Put a nav guard on this route when it is created-->
-          <b-nav-item href="#" :disabled="!this.$store.getters.isAuthenticated">Captions<b-icon-lock v-if="!this.$store.getters.isAuthenticated"></b-icon-lock>
+          <b-nav-item href="#">Captions<b-icon-lock v-if="!this.$auth.isAuthenticated"></b-icon-lock>
           </b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-
           <b-nav-item-dropdown right>
             <!-- Using 'button-content' slot -->
             <template v-slot:button-content>
               <!--<em>Login</em>-->
               <h5>
+                <!--<img style="size:1rem;" :src="$auth.user.picture">-->
+                <div style="font-size:1rem;">{{profile.name}} </div>
                 <b-icon-list></b-icon-list>
               </h5>
             </template>
-            <b-dropdown-item v-if="!this.$store.getters.isAuthenticated" @click.prevent="login">Login</b-dropdown-item>
-            <b-dropdown-item @click.prevent="logout">Sign Out</b-dropdown-item>
+            <b-dropdown-item v-if="!this.$auth.isAuthenticated" @click.prevent="login">Login</b-dropdown-item>
+            <b-dropdown-item v-if="this.$auth.isAuthenticated" @click.prevent="logout">Sign Out</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -45,28 +46,33 @@ import {
   BIconList,
   BIconLock
 } from 'bootstrap-vue'
+
 export default {
   name: 'app',
   data() {
     return {
-      //isAuthenticated: false
-    }
+      profile: {
+        name: this.$auth.user.given_name
+      }
+    };
   },
   components: {
     BIconList,
     BIconLock
   },
-  created() {
-    console.log(this.$auth.isAuthenticated());
-    //this.$store.commit('updateAuth', this.$auth.isAuthenticated());
+  mounted() {
+    console.log(this.$auth.user);
+    //this.$store.commit('updateAuth', this.$auth.isAuthenticated);
   },
   methods: {
     login() {
-      this.$auth.login();
+      this.$auth.loginWithRedirect();
       console.log("Signed In");
     },
     logout() {
-      this.$auth.logout();
+      this.$auth.logout({
+        returnTo: window.location.origin
+      });
       console.log("Signed Out!");
     }
     /*,
