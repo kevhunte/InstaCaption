@@ -14,7 +14,7 @@
         <b-navbar-nav>
           <b-nav-item to="/about">About</b-nav-item>
           <!--Put a nav guard on this route when it is created-->
-          <b-nav-item href="#">Captions<b-icon-lock v-if="!this.$auth.isAuthenticated"></b-icon-lock>
+          <b-nav-item to="/captions">Captions<b-icon-lock v-if="!this.$auth.isAuthenticated"></b-icon-lock>
           </b-nav-item>
         </b-navbar-nav>
 
@@ -25,8 +25,8 @@
             <template v-slot:button-content>
               <!--<em>Login</em>-->
               <h5>
-                <!--<img style="size:1rem;" :src="$auth.user.picture">-->
-                <div style="font-size:1rem;">{{profile.name}} </div>
+                <img v-if="$auth.isAuthenticated" style="max-width:2rem;" :src="$auth.user.picture">
+                <a v-if="$auth.isAuthenticated" style="font-size:1rem;"> {{$auth.user.given_name}} </a>
                 <b-icon-list></b-icon-list>
               </h5>
             </template>
@@ -50,19 +50,11 @@ import {
 export default {
   name: 'app',
   data() {
-    return {
-      profile: {
-        name: this.$auth.user.given_name
-      }
-    };
+    return {}
   },
   components: {
     BIconList,
     BIconLock
-  },
-  mounted() {
-    console.log(this.$auth.user);
-    //this.$store.commit('updateAuth', this.$auth.isAuthenticated);
   },
   methods: {
     login() {
@@ -75,11 +67,6 @@ export default {
       });
       console.log("Signed Out!");
     }
-    /*,
-        handleLoginEvent(data) {
-          this.$store.commit('updateAuth', this.$auth.isAuthenticated());
-          this.profile = data.profile;
-        }*/
   }
 }
 </script>
