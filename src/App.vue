@@ -26,7 +26,7 @@
               <!--<em>Login</em>-->
               <h5>
                 <img v-if="$auth.isAuthenticated" style="max-width:2rem;" :src="$auth.user.picture">
-                <a v-if="$auth.isAuthenticated" style="font-size:1rem;"> {{$auth.user.given_name}} </a>
+                <!--<a v-if="$auth.isAuthenticated" style="font-size:1rem;"> {{$auth.user.given_name}} </a>-->
                 <b-icon-list></b-icon-list>
               </h5>
             </template>
