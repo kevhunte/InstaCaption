@@ -44,7 +44,8 @@ export default {
     return {
       sliding: null,
       slide: 0,
-      interval: 4000,
+      interval: this.timer,
+      timer: 4000,
       images: [
         require('@/assets/KungFuKenny.jpg')
       ]
@@ -61,7 +62,7 @@ export default {
       this.interval = 0
     },
     onResume(slide) {
-      this.interval = 4000
+      this.interval = this.timer
     }
   }
 }
