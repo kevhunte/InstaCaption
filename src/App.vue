@@ -5,7 +5,7 @@
     <router-link to="/about">About</router-link>
   </div>-->
   <div id="nav">
-    <b-navbar type="dark" variant="dark">
+    <b-navbar id="navbar" type="dark" variant="dark">
       <b-navbar-brand to="/">InstaCaption</b-navbar-brand>
 
       <!--<b-navbar-toggle target="nav-collapse"></b-navbar-toggle>-->
@@ -38,6 +38,7 @@
     </b-navbar>
   </div>
   <router-view />
+  <h3>----- Footer -----</h3>
 </div>
 </template>
 
@@ -83,6 +84,7 @@ export default {
 #nav {
   position: sticky;
   padding-bottom: 10px;
+  z-index: 99;
 }
 
 /*.dropdown:hover .dropdown-menu {
