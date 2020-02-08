@@ -1,5 +1,5 @@
 <template>
-<div id="Captions">
+<div id="Captions" class="captions page">
   <a>All personal and customized data! Needs to be authenticated before seeing this page</a>
   <h3>Welcome back {{$auth.user.given_name}}</h3>
 </div>

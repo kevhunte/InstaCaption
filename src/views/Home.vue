@@ -1,5 +1,5 @@
 <template>
-<div class="home">
+<div class="home page">
   <!--<h1 id="Homeheader" class="">InstaCaption</h1>-->
   <!--Change font here-->
   <div id="carousel">
