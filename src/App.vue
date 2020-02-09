@@ -25,7 +25,7 @@
             <template v-slot:button-content>
               <!--<em>Login</em>-->
               <h5>
-                <img v-if="$auth.isAuthenticated" style="max-width:2rem;" :src="$auth.user.picture">
+                <b-img v-if="$auth.isAuthenticated" rounded="circle" style="max-width:2rem;" :src="$auth.user.picture"></b-img>
                 <!--<a v-if="$auth.isAuthenticated" style="font-size:1rem;"> {{$auth.user.given_name}} </a>-->
                 <b-icon-list></b-icon-list>
               </h5>
