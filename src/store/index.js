@@ -20,6 +20,7 @@ export default new Vuex.Store({
       //console.log("path returned:", address);
       const response = await fetch(address + 'dummy.json'); //replace with API call to Gateway
       /*
+      //pass in bearer token as auth header
       //Prod Version
       const address = 'REST_API'+&userIDandProvider;
       const response = await fetch(address);
