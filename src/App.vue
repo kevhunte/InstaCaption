@@ -63,6 +63,7 @@ export default {
       console.log("Signed In");
     },
     logout() {
+      this.$store.dispatch('saveAndClearPreviousSearch');
       this.$auth.logout({
         returnTo: window.location.origin
       });
