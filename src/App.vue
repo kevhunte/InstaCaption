@@ -53,6 +53,13 @@ export default {
   data() {
     return {}
   },
+  watch: {
+    $auth(newVal, oldVal) {
+      if (!newVal.isAuthenticated) { // calls on timeout or logout
+        this.$store.dispatch('saveAndClearPreviousSearch');
+      }
+    }
+  },
   components: {
     BIconList,
     BIconLock

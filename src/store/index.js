@@ -42,6 +42,7 @@ export default new Vuex.Store({
     },
     saveAndClearPreviousSearch(context){
       console.log('clearing previous searches');
+      //call on logout or timeout to save latest changes
       try{
         // send to server, then delete local copy. Make method async
         localStorage.removeItem('previousSearchs');

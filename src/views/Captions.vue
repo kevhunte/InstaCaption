@@ -16,9 +16,7 @@
       </div>
     </div>
   </section>
-  <h4>Store fetch in localStorage to preserve rest calls<br></h4>
-
-  <h4>Check Cache then DB <br>Store/Send back as much as possible, paginate data
+  <h4>Check Cache then DB <br>Store/Return as much as possible, paginate data
     <br><br></h4>
   <h5>Form component for capturing search criteria<br>^^cleanse input for xss^^</h5><br><br>
   <h5>Pass to parent to create GET request to Genius wrapper, API 1. <br>
