@@ -8,7 +8,7 @@
     <h4>Here's what you searched for last time:</h4>
     <div id="prevWrapper" focus class="col-md-4 m-4 mx-auto">
       <div v-for="ps in this.$store.getters.previousSearchs" class="m-2">
-        <strong v-b-toggle="'Song_'+ps.id" class="clickme" style="font-size:1.2rem;"> {{ps.name}} by {{ps.Artist}} </strong>
+        <strong v-b-toggle="'Song_'+ps.id" class="clickme"> {{ps.name}} by {{ps.Artist}} </strong>
         <br>
         <b-collapse :id="'Song_'+ps.id" class="mt-2">
           <h6 style="font-size:1.2rem;">{{ps.Lyrics}}</h6>
@@ -51,8 +51,13 @@ export default {
 }
 </script>
 <style scoped>
+.clickme {
+  font-size: 1.2rem;
+}
+
 .clickme:hover {
   color: #17a2b8;
+  font-size: 1.22rem;
 }
 
 /*#prevWrapper {
