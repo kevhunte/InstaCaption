@@ -28,7 +28,7 @@
 
       </b-form-group>
 
-      <b-button type="submit" @click="onSubmit" variant="primary">Search</b-button>
+      <b-button type="submit" @click="onSubmit" @keyup.enter="onSubmit" variant="primary">Search</b-button>
       <b-button type="reset" variant="danger">Reset</b-button>
     </b-form>
   </div>
@@ -81,6 +81,7 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
+      console.log("searching...");
       // check if searched something already stored locally and display. If not, query wrapper
     },
     onReset() {
