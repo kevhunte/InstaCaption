@@ -17,7 +17,27 @@
     </div>
   </section>
   <h4>Check Cache then DB <br>Store/Return as much as possible, paginate data
-    <br><br></h4>
+    <br></h4>
+  <div id="form-container" class="col-md-6 mx-auto m-2">
+    <b-form @reset="onReset">
+      <b-form-group id="input-group-1" label="" label-for="input-1" description="The world is yours.">
+        <b-form-input id="input-1" v-model="searchData.song" type="search" required autocomplete="off" placeholder="Enter a song" list="my-list-id">
+        </b-form-input>
+
+        <datalist id="my-list-id">
+          <option v-for="ps in this.$store.getters.previousSearchs">{{ ps.name }}</option>
+        </datalist>
+
+      </b-form-group>
+
+      <!--<b-form-group id="input-group-2" label="" label-for="input-2">
+        <b-form-input id="input-2" v-model="searchData.artist" :required="!searchData.song" placeholder="Or enter an artist"></b-form-input>
+      </b-form-group>-->
+
+      <b-button type="submit" @click="onSubmit" variant="primary">Search</b-button>
+      <b-button type="reset" variant="danger">Reset</b-button>
+    </b-form>
+  </div>
   <h5>Form component for capturing search criteria<br>^^cleanse input for xss^^</h5><br><br>
   <h5>Pass to parent to create GET request to Genius wrapper, API 1. <br>
     Security: tarpit users that make more than 15 unique requests in a day.<br>
@@ -31,21 +51,42 @@ export default {
   name: 'captions',
   data() {
     return {
-      //previousSearchs: null
+      searchData: {
+        song: null,
+        album: null,
+        artist: null
+      },
+      searchResults: null
+      //accessToken: null
     }
   },
-  created() {
+  async created() {
     if (typeof this.$store.getters.previousSearchs !== undefined) {
       //doesn't work. Make dispatch store in localStorage
       this.getPreviousSearch();
     }
+    //const claims = await this.$auth.getIdTokenClaims();
+    //this.accessToken = claims.__raw; //bearer token for auth header
+    //console.log(this.parseJwt(this.accessToken));
   },
   methods: {
     getPreviousSearch() {
       this.$store.dispatch('getPreviousSearch');
     },
-    showCaption(id) {
-      return this.$store.getters.previousSearchs[id];
+    onSubmit(evt) {
+      evt.preventDefault()
+    },
+    onReset() {
+
+    },
+    parseJwt(token) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+
+      return JSON.parse(jsonPayload);
     }
   }
 }
