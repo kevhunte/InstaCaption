@@ -54,8 +54,8 @@ export default {
     return {}
   },
   watch: {
-    $auth(newVal, oldVal) {
-      if (!newVal.isAuthenticated) { // calls on timeout or logout
+    '$auth.isAuthenticated': function(val) {
+      if (!val) { // calls on timeout or logout
         this.$store.dispatch('saveAndClearPreviousSearch');
       }
     }
