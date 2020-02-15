@@ -33,6 +33,9 @@
     </b-form>
   </div>
 
+  <div v-if="searchResults">
+    <strong>Found it!<br> {{this.searchResults}}</strong>
+  </div>
   <h4>Check Dynamodb <br>Store/Return as much as possible, paginate data if necessary<br></h4>
   <h5>GET request to Genius wrapper, API 1. <br>
     Security: tarpit users that make more than 15 unique requests in a day.<br>
@@ -83,9 +86,23 @@ export default {
       evt.preventDefault();
       console.log("searching...");
       // check if searched something already stored locally and display. If not, query wrapper
+      for (let p in this.$store.getters.previousSearchs) { // only five objects max. Not that bad
+        const ps = this.$store.getters.previousSearchs[p];
+        //console.log(ps);
+        if (ps.name == this.searchData.song) {
+          this.searchResults = ps.Lyrics;
+          //console.log('found', ps.Lyrics);
+          return;
+        }
+      }
+      console.log('Not found. Making call..');
+      // if we get here we have to call API to get it
+
+      //display result and add to enqueue (inc from last id). Dequeue beginning of list
     },
     onReset() {
       this.searchData.song = null;
+      this.searchResults = null;
     },
     parseJwt(token) {
       var base64Url = token.split('.')[1];
