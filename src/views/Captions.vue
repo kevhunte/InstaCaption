@@ -33,19 +33,22 @@
     </b-form>
   </div>
 
-  <div v-if="searchResults">
-    <strong>Found it!<br> {{this.searchResults}}</strong>
+  <div class="m-4 mx-auto">
+    <strong v-for="sr in this.searchResults">{{sr}}</strong>
   </div>
-  <h4>Check Dynamodb <br>Store/Return as much as possible, paginate data if necessary<br></h4>
-  <h5>GET request to Genius wrapper, API 1. <br>
-    Security: tarpit users that make more than 15 unique requests in a day.<br>
-    Make terms and conditions in footer<br>
-    400 response with error message</h5><br><br>
+
   <h4>Populate with search results from wrapper.<br>
     Update last searched to show most recent! Alayna has spoken :) </h4><br><br>
+  <h4>Check Dynamodb. STORE Full Title(song by artist), and URL. Key is hash('full_title'.toUpper()) -> Genius key <br><br>API is only needed for URL. Web scraping is done locally (Cheerio and Node)<br></h4>
+  <h5>One API needed. Song and Artist, and site URL to them <br>
+    Security: tarpit users that make more than 10 unique requests in a day.<br>
+    Make terms and conditions in footer<br>
+    400 response with error message</h5><br><br>
 </div>
 </template>
 <script>
+var request = require("request");
+const cheerio = require("cheerio");
 export default {
   name: 'captions',
   data() {
@@ -82,27 +85,54 @@ export default {
     getPreviousSearch() {
       this.$store.dispatch('getPreviousSearch');
     },
-    onSubmit(evt) {
+    async onSubmit(evt) {
       evt.preventDefault();
       console.log("searching...");
+      //console.log(this.searchData.song);
       // check if searched something already stored locally and display. If not, query wrapper
       for (let p in this.$store.getters.previousSearchs) { // only five objects max. Not that bad
         const ps = this.$store.getters.previousSearchs[p];
-        //console.log(ps);
-        if (ps.name == this.searchData.song) {
-          this.searchResults = ps.Lyrics;
-          //console.log('found', ps.Lyrics);
+        //console.log(ps.name);
+        if (ps.name == this.searchData.song) { // check if toUpper works with symbols in string
+          await this.pullLyrics(ps.url); // pulls lyrics and stores in results
           return;
         }
       }
       console.log('Not found. Making call..');
       // if we get here we have to call API to get it
 
+      // pull lyrics on result
+
       //display result and add to enqueue (inc from last id). Dequeue beginning of list
     },
     onReset() {
       this.searchData.song = null;
       this.searchResults = null;
+    },
+    pullLyrics(url) {
+      //let lyrics = null;
+      const proxy = 'https://cors-anywhere.herokuapp.com/';
+      try {
+        request(proxy + url, function(error, response, body) {
+          if (error) throw new Error(error);
+          //console.log('got webpage');
+          //console.log(body);
+          //parse body
+          const $ = cheerio.load(body);
+          //const lyrics = $('body > routable-page > ng-outlet > song-page > div > div > div.song_body.column_layout > div.column_layout-column_span.column_layout-column_span--primary > div > defer-compile:nth-child(1) > lyrics > div > div.lyrics');
+
+          let rawLyrics = $('div.lyrics').text().trim();
+          // split around brackets
+          //console.log(rawLyrics);
+          // regex to process data
+          let lyrics = rawLyrics.replace(/\[(.*)\]/g, "").trim().split('\n'); // displays line by line
+
+          this.searchResults = lyrics;
+          console.log('updated - ', this.searchResults);
+        });
+      } catch (e) {
+        console.error(e);
+      }
     },
     parseJwt(token) {
       var base64Url = token.split('.')[1];
