@@ -33,9 +33,9 @@
     </b-form>
   </div>
 
-  <div id="resultsContainer" v-if="searchResults" class="col-md-8 m-4 mx-auto">
+  <div id="resultsContainer" v-if="$store.getters.currentLyrics" class="col-md-8 m-4 mx-auto">
     <strong>Lyrics:</strong><br>
-    <strong v-for="(sr,index) in this.searchResults" :key="index">
+    <strong v-for="(sr,index) in this.$store.getters.currentLyrics" :key="index">
       {{sr.content}} <br>
     </strong>
   </div>
@@ -61,10 +61,7 @@ export default {
         album: null,
         artist: null
       },
-      searchResults: null,
-      dataList: '',
-      perPage: 1,
-      currentPage: 1
+      dataList: ''
       //accessToken: null
     }
   },
@@ -119,6 +116,7 @@ export default {
       const proxy = 'https://cors-anywhere.herokuapp.com/';
       let arr = []
       try {
+        // start loading
         request(proxy + url, function(error, response, body) {
           if (error) throw new Error(error);
           //console.log('got webpage');
@@ -139,9 +137,11 @@ export default {
             });
           }
         });
-        this.searchResults = arr;
-        console.log('updated - ', this.searchResults);
+        this.$store.dispatch('persistCurrentSearch', arr);
+        // stop loading
+        console.log('updated - ', this.$store.getters.currentLyrics);
       } catch (e) {
+        // show crashed message
         console.error(e);
       }
     },
@@ -170,6 +170,14 @@ export default {
 /*Gets rid of caret in auto-fill*/
 [list]::-webkit-calendar-picker-indicator {
   display: none;
+}
+
+#resultsContainer {
+  overflow-y: auto;
+  max-height: 18rem;
+  border-style: solid;
+  border-radius: 8px;
+  border-width: thin;
 }
 
 /*#prevWrapper {

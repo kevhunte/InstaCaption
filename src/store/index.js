@@ -5,11 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    previousSearchs: null
+    previousSearchs: null,
+    currentLyrics: null
   },
   mutations: {
     setPreviousSearches(state, value){
       state.previousSearchs = value
+    },
+    setCurrentLyrics(state, value){
+      state.currentLyrics = value
     }
   },
   actions: {
@@ -35,7 +39,7 @@ export default new Vuex.Store({
         //Prod Version
         const address = 'REST_API'+&userIDandProvider;
         const response = await fetch(address,{
-        
+
       });
         */
         const data = await response.json();
@@ -55,9 +59,14 @@ export default new Vuex.Store({
       catch(e){
         console.log('error when deleting previous searches...\n'+e);
       }
+    },
+    persistCurrentSearch(context, value){
+      console.log('storing current search..');
+      context.commit('setCurrentLyrics',value);
     }
   },
   getters: {
-    previousSearchs: state => state.previousSearchs
+    previousSearchs: state => state.previousSearchs,
+    currentLyrics: state => state.currentLyrics
   }
 })
