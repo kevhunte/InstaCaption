@@ -33,8 +33,11 @@
     </b-form>
   </div>
 
-  <div class="m-4 mx-auto">
-    <strong v-for="sr in this.searchResults">{{sr}}</strong>
+  <div id="resultsContainer" v-if="searchResults" class="col-md-8 m-4 mx-auto">
+    <strong>Lyrics:</strong><br>
+    <strong v-for="(sr,index) in this.searchResults" :key="index">
+      {{sr.content}} <br>
+    </strong>
   </div>
 
   <h4>Populate with search results from wrapper.<br>
@@ -59,7 +62,9 @@ export default {
         artist: null
       },
       searchResults: null,
-      dataList: ''
+      dataList: '',
+      perPage: 1,
+      currentPage: 1
       //accessToken: null
     }
   },
@@ -112,6 +117,7 @@ export default {
     pullLyrics(url) {
       //let lyrics = null;
       const proxy = 'https://cors-anywhere.herokuapp.com/';
+      let arr = []
       try {
         request(proxy + url, function(error, response, body) {
           if (error) throw new Error(error);
@@ -127,9 +133,14 @@ export default {
           // regex to process data
           let lyrics = rawLyrics.replace(/\[(.*)\]/g, "").trim().split('\n'); // displays line by line
 
-          this.searchResults = lyrics;
-          console.log('updated - ', this.searchResults);
+          for (let i = 0; i < lyrics.length; i++) {
+            arr.push({
+              content: lyrics[i]
+            });
+          }
         });
+        this.searchResults = arr;
+        console.log('updated - ', this.searchResults);
       } catch (e) {
         console.error(e);
       }
