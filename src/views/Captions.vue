@@ -40,10 +40,10 @@
     </strong>
   </div>
 
-  <h4>Populate with search results from wrapper.<br>
+  <h4>Populate with search results from localStorage.<br>
     Update last searched to show most recent! Alayna has spoken :) </h4><br><br>
-  <h4>Check Dynamodb. STORE Full Title(song by artist), and URL. Key is hash('full_title'.toUpper()) -> Genius key <br><br>API is only needed for URL. Web scraping is done locally (Cheerio and Node)<br></h4>
-  <h5>One API needed. Song and Artist, and site URL to them <br>
+  <h4>STORE Full Title(song by artist), and URL Genius key <br><br></h4>
+  <h5>No API needed. If not in storage, make call. Only allow few people through oauth to make accounts<br>
     Security: tarpit users that make more than 10 unique requests in a day.<br>
     Make terms and conditions in footer<br>
     400 response with error message</h5><br><br>
@@ -95,7 +95,7 @@ export default {
       for (let p in this.$store.getters.previousSearchs) { // only five objects max. Not that bad
         const ps = this.$store.getters.previousSearchs[p];
         //console.log(ps.name);
-        if (ps.name == this.searchData.song) { // check if toUpper works with symbols in string
+        if (ps.name.includes(this.searchData.song)) { // check if toUpper works with symbols in string
           await this.pullLyrics(ps.url); // pulls lyrics and stores in results
           return;
         }
@@ -103,9 +103,9 @@ export default {
       console.log('Not found. Making call..');
       // if we get here we have to call API to get it
 
-      // pull lyrics on result
+      // pull lyrics on result. Since it's just me, put Genius API in here. I won't use 500 calls a month
 
-      //display result and add to enqueue (inc from last id). Dequeue beginning of list
+      // add JSON body to previousSearchs on success. If greater than 10, pop off front of list
     },
     onReset() {
       this.searchData.song = null;
@@ -137,7 +137,7 @@ export default {
             });
           }
         });
-        this.$store.dispatch('persistCurrentSearch', arr);
+        this.$store.dispatch('setCurrentSearch', arr);
         // stop loading
         console.log('updated - ', this.$store.getters.currentLyrics);
       } catch (e) {

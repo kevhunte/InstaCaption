@@ -60,9 +60,9 @@ export default new Vuex.Store({
         console.log('error when deleting previous searches...\n'+e);
       }
     },
-    persistCurrentSearch(context, value){
+    setCurrentSearch(context, value){
       console.log('storing current search..');
-      context.commit('setCurrentLyrics',value);
+      context.commit('setCurrentLyrics',value); // sets
     }
   },
   getters: {
