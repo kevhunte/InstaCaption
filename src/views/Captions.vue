@@ -19,11 +19,19 @@
   <div id="form-container" class="col-md-6 mx-auto m-2">
     <b-form @reset="onReset">
       <b-form-group id="input-group-1" label="" label-for="input-1" description="The world is yours.">
-        <b-form-input id="song_input" v-model="searchData.song" type="search" required autocomplete="off" placeholder="Enter a song" :list="dataList">
+        <b-form-input id="song_input" v-model="searchData.song" :state="songInputValidated" type="search" autocomplete="off" placeholder="Enter a song" :list="dataList">
         </b-form-input>
 
         <datalist id="my-list-id">
           <option v-for="ps in this.$store.getters.previousSearchs">{{ ps.name }}</option>
+        </datalist>
+
+        <b-form-input id="artist_input" class="mt-2" v-model="searchData.artist" type="search" autocomplete="off" placeholder="Enter an artist" :list="dataList2">
+        </b-form-input>
+
+        <!--This may have repeats. Have to loop through and make a set-->
+        <datalist id="my-list-id2">
+          <option v-for="artist in this.uniqueArtists">{{ artist }}</option>
         </datalist>
 
       </b-form-group>
@@ -61,7 +69,10 @@ export default {
         album: null,
         artist: null
       },
-      dataList: ''
+      dataList: '',
+      dataList2: '',
+      songInputValidated: null,
+      uniqueArtists: new Set()
       //accessToken: null
     }
   },
@@ -72,28 +83,46 @@ export default {
       } else {
         this.dataList = '';
       }
+      //return val ? this.songInputValidated = true : this.songInputValidated = false; // state validation
+    },
+    'searchData.artist': function(val) { // only shows on type
+      if (val) {
+        this.dataList2 = 'my-list-id2';
+      } else {
+        this.dataList2 = '';
+      }
     }
   },
   async created() {
     if (typeof this.$store.getters.previousSearchs !== undefined) {
-      //doesn't work. Make dispatch store in localStorage
+      // sets from cache or from API
       this.getPreviousSearch();
+      this.getArtists();
     }
-    //const claims = await this.$auth.getIdTokenClaims();
-    //this.accessToken = claims.__raw; //bearer token for auth header
-    //console.log(this.parseJwt(this.accessToken));
   },
   methods: {
     getPreviousSearch() {
       this.$store.dispatch('getPreviousSearch');
     },
+    getArtists() {
+      for (let s of this.$store.getters.previousSearchs) {
+        this.uniqueArtists.add(s.Artist); // displays artists with no repeats
+      }
+    },
     async onSubmit(evt) {
       evt.preventDefault();
-      console.log("searching...");
+      if (!this.searchData.song) {
+        // might want to add some type of regex in here too
+        console.log('Invalid search');
+        this.songInputValidated = false;
+        return;
+      }
+      this.songInputValidated = null;
+      console.log("searching for " + this.searchData.song + "...");
       //console.log(this.searchData.song);
       // check if searched something already stored locally and display. If not, query wrapper
-      for (let p in this.$store.getters.previousSearchs) { // only five objects max. Not that bad
-        const ps = this.$store.getters.previousSearchs[p];
+      for (let p of this.$store.getters.previousSearchs) { // only five objects max. Not that bad
+        const ps = p;
         //console.log(ps.name);
         if (ps.name.includes(this.searchData.song)) { // check if toUpper works with symbols in string
           await this.pullLyrics(ps.url); // pulls lyrics and stores in results
