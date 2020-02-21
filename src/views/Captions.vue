@@ -22,7 +22,7 @@
         <b-form-input id="song_input" v-model="searchData.song" :state="songInputValidated" type="search" autocomplete="off" placeholder="Enter a song" :list="dataList">
         </b-form-input>
 
-        <datalist id="my-list-id">
+        <datalist id="my-list-id" class="col-md-6 mx-auto">
           <option v-for="ps in this.$store.getters.previousSearchs">{{ ps.name }}</option>
         </datalist>
 
@@ -30,7 +30,7 @@
         </b-form-input>
 
         <!--This may have repeats. Have to loop through and make a set-->
-        <datalist id="my-list-id2">
+        <datalist id="my-list-id2" class="col-md-6 mx-auto">
           <option v-for="artist in this.uniqueArtists">{{ artist }}</option>
         </datalist>
 
@@ -48,13 +48,10 @@
     </strong>
   </div>
 
-  <h4>Populate with search results from localStorage.<br>
-    Update last searched to show most recent! Alayna has spoken :) </h4><br><br>
-  <h4>STORE Full Title(song by artist), and URL Genius key <br><br></h4>
-  <h5>No API needed. If not in storage, make call. Only allow few people through oauth to make accounts<br>
-    Security: tarpit users that make more than 10 unique requests in a day.<br>
-    Make terms and conditions in footer<br>
-    400 response with error message</h5><br><br>
+  <h4>Update last searched to show most recent! Alayna has spoken :) </h4><br><br>
+  <h4>STORE Name, Artist (Parse full title), Album, and URL Genius key <br><br></h4>
+  <h5>Make terms and conditions in footer<br>
+    404 response for no find</h5><br><br>
 </div>
 </template>
 <script>
@@ -113,7 +110,7 @@ export default {
       evt.preventDefault();
       if (!this.searchData.song) {
         // might want to add some type of regex in here too
-        console.log('Invalid search');
+        //console.log('Invalid search');
         this.songInputValidated = false;
         return;
       }
@@ -139,6 +136,7 @@ export default {
     onReset() {
       this.searchData.song = null;
       this.searchResults = null;
+      this.songInputValidated = null;
     },
     pullLyrics(url) {
       //let lyrics = null;
