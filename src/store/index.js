@@ -17,7 +17,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async getPreviousSearch(context){
+    async getPreviousSearch(context, token){
       // if there, return. Else, get from server
       if(localStorage.getItem('previousSearchs')){
         try{
@@ -29,9 +29,12 @@ export default new Vuex.Store({
       }
       else{
         console.log('fetching previous searches..');
-        const address = window.location.origin + '' + window.location.pathname;
-        //console.log("path returned:", address);
-        const response = await fetch(address + 'dummy.json'); //replace with API call to Gateway
+
+        const response = await fetch('https://onifxs3yxf.execute-api.us-east-1.amazonaws.com/dev/',{
+          headers:{
+            Authorization: token
+          }
+        });
         /*
         //pass in bearer token as auth header
         const claims = await this.$auth.getIdTokenClaims();
@@ -43,9 +46,15 @@ export default new Vuex.Store({
       });
         */
         const data = await response.json();
-        //console.log(data);
-        context.commit('setPreviousSearches',data); // set global value
-        localStorage.setItem('previousSearchs',JSON.stringify(data));
+        //console.log(data.body);
+        console.log(data);
+        if(data.statusCode == 200){
+          context.commit('setPreviousSearches',data.body); // set global value
+          localStorage.setItem('previousSearchs',JSON.stringify(data.body));
+        }else{
+          console.error(data);
+        }
+
       }
     },
     saveAndClearPreviousSearch(context){

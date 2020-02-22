@@ -69,8 +69,8 @@ export default {
       dataList: '',
       dataList2: '',
       songInputValidated: null,
-      uniqueArtists: new Set()
-      //accessToken: null
+      uniqueArtists: new Set(),
+      accessToken: null
     }
   },
   watch: {
@@ -91,20 +91,31 @@ export default {
     }
   },
   async created() {
+    //this.accessToken = await this.$auth.getIdTokenClaims().__raw;
+    let claims = await this.$auth.getIdTokenClaims();
+    this.accessToken = claims.__raw;
     if (typeof this.$store.getters.previousSearchs !== undefined) {
       // sets from cache or from API
-      this.getPreviousSearch();
+      //this.getPreviousSearch(claims.__raw);
+      this.getPreviousSearch(this.accessToken);
       this.getArtists();
     }
+    //console.log('token - ', this.accessToken);
   },
   methods: {
-    getPreviousSearch() {
-      this.$store.dispatch('getPreviousSearch');
+    getPreviousSearch(token) {
+      this.$store.dispatch('getPreviousSearch', token);
     },
     getArtists() {
       for (let s of this.$store.getters.previousSearchs) {
         this.uniqueArtists.add(s.Artist); // displays artists with no repeats
       }
+    },
+    fetchSongData(song, artist) {
+      let results = null;
+      //const token = this.$auth.getIdTokenClaims().__raw;
+      // make fetch to wrapper with song and artist
+      return results;
     },
     async onSubmit(evt) {
       evt.preventDefault();
@@ -128,7 +139,11 @@ export default {
       }
       console.log('Not found. Making call..');
       // if we get here we have to call API to get it
-
+      /*
+      const result = this.fetchSongData(searchData.song, searchData.artist);
+      // logic to push result into previousSearchs if under 10. Do the same at API
+      this.pullLyrics(result.url);
+      */
       // pull lyrics on result. Since it's just me, put Genius API in here. I won't use 500 calls a month
 
       // add JSON body to previousSearchs on success. If greater than 10, pop off front of list
