@@ -36,14 +36,7 @@ export default new Vuex.Store({
           }
         });
         /*
-        //pass in bearer token as auth header
-        const claims = await this.$auth.getIdTokenClaims();
-        const accessToken = claims.__raw; //bearer token for auth header
-        //Prod Version
-        const address = 'REST_API'+&userIDandProvider;
-        const response = await fetch(address,{
-
-      });
+        This api call is complete. All info is in token
         */
         const data = await response.json();
         //console.log(data.body);

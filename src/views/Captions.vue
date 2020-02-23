@@ -113,8 +113,7 @@ export default {
     },
     fetchSongData(song, artist) {
       let results = null;
-      //const token = this.$auth.getIdTokenClaims().__raw;
-      // make fetch to wrapper with song and artist
+      // make fetch to wrapper with song and artist as query strings
       return results;
     },
     async onSubmit(evt) {
@@ -126,7 +125,7 @@ export default {
         return;
       }
       this.songInputValidated = null;
-      console.log("searching for " + this.searchData.song + "...");
+      //console.log("searching for " + this.searchData.song + "...");
       //console.log(this.searchData.song);
       // check if searched something already stored locally and display. If not, query wrapper
       for (let p of this.$store.getters.previousSearchs) { // only five objects max. Not that bad
@@ -181,7 +180,7 @@ export default {
         });
         this.$store.dispatch('setCurrentSearch', arr);
         // stop loading
-        console.log('updated - ', this.$store.getters.currentLyrics);
+        //console.log('updated - ', this.$store.getters.currentLyrics);
       } catch (e) {
         // show crashed message
         console.error(e);
