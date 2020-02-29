@@ -11,6 +11,9 @@ export default new Vuex.Store({
   mutations: {
     setPreviousSearches(state, value){
       state.previousSearchs = value;
+      if(value == null){
+        localStorage.removeItem('previousSearchs');
+      }
       localStorage.setItem('previousSearchs',JSON.stringify(value));
     },
     setCurrentLyrics(state, value){

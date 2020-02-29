@@ -79,6 +79,7 @@ export const useAuth0 = ({
       },
       /** Logs the user out and removes their session on the authorization server */
       logout(o) {
+        localStorage.removeItem('previousSearchs');
         return this.auth0Client.logout(o);
       }
     },

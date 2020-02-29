@@ -48,7 +48,6 @@
     </strong>
   </div>
 
-  <h4>Update last searched to show most recent! Alayna has spoken :) </h4><br><br>
   <h5>Make terms and conditions in footer</h5><br><br>
 </div>
 </template>
