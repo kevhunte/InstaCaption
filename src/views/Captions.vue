@@ -26,7 +26,7 @@
           <option v-for="ps in this.$store.getters.previousSearchs">{{ ps.name }}</option>
         </datalist>
 
-        <b-form-input id="artist_input" class="mt-2" v-model="searchData.artist" type="search" autocomplete="off" placeholder="Enter an artist" :list="dataList2">
+        <b-form-input id="artist_input" class="mt-2" v-model="searchData.artist" :state="artistInputValidated" type="search" autocomplete="off" placeholder="Enter an artist" :list="dataList2">
         </b-form-input>
 
         <!--This may have repeats. Have to loop through and make a set-->
@@ -49,9 +49,7 @@
   </div>
 
   <h4>Update last searched to show most recent! Alayna has spoken :) </h4><br><br>
-  <h4>STORE Name, Artist (Parse full title), Album, and URL Genius key <br><br></h4>
-  <h5>Make terms and conditions in footer<br>
-    404 response for no find</h5><br><br>
+  <h5>Make terms and conditions in footer</h5><br><br>
 </div>
 </template>
 <script>
@@ -69,6 +67,7 @@ export default {
       dataList: '',
       dataList2: '',
       songInputValidated: null,
+      artistInputValidated: null,
       uniqueArtists: new Set(),
       accessToken: null
     }
@@ -91,12 +90,11 @@ export default {
     }
   },
   async created() {
-    //this.accessToken = await this.$auth.getIdTokenClaims().__raw;
-    let claims = await this.$auth.getIdTokenClaims();
-    this.accessToken = claims.__raw;
+
     if (typeof this.$store.getters.previousSearchs !== undefined) {
+      let claims = await this.$auth.getIdTokenClaims();
+      this.accessToken = claims.__raw;
       // sets from cache or from API
-      //this.getPreviousSearch(claims.__raw);
       this.getPreviousSearch(this.accessToken);
       this.getArtists();
     }
@@ -111,9 +109,27 @@ export default {
         this.uniqueArtists.add(s.Artist); // displays artists with no repeats
       }
     },
-    fetchSongData(song, artist) {
+    async fetchSongData(_song, _artist, token) {
       let results = null;
       // make fetch to wrapper with song and artist as query strings
+      try {
+        let params = new URLSearchParams({
+          artist: _artist,
+          song: _song
+        });
+        const response = await fetch('https://uy72bfatvl.execute-api.us-east-1.amazonaws.com/dev/?' + params, {
+          headers: {
+            Authorization: token
+          }
+        });
+        const data = await response.json();
+        //console.log('fetchSongData - ', data.body);
+        return data.body;
+      } catch (e) {
+        console.log('error - ', e);
+      }
+
+
       return results;
     },
     async onSubmit(evt) {
@@ -124,7 +140,11 @@ export default {
         this.songInputValidated = false;
         return;
       }
+      if (!this.searchData.artist) {
+        this.artistInputValidated = false
+      }
       this.songInputValidated = null;
+      this.artistInputValidated = null;
       //console.log("searching for " + this.searchData.song + "...");
       //console.log(this.searchData.song);
       // check if searched something already stored locally and display. If not, query wrapper
@@ -136,21 +156,25 @@ export default {
           return;
         }
       }
-      console.log('Not found. Making call..');
+      console.log('Making call to AWS..');
       // if we get here we have to call API to get it
-      /*
-      const result = this.fetchSongData(searchData.song, searchData.artist);
-      // logic to push result into previousSearchs if under 10. Do the same at API
-      this.pullLyrics(result.url);
-      */
-      // pull lyrics on result. Since it's just me, put Genius API in here. I won't use 500 calls a month
 
-      // add JSON body to previousSearchs on success. If greater than 10, pop off front of list
+      const result = await this.fetchSongData(this.searchData.song, this.searchData.artist, this.accessToken);
+
+      console.log('fetchSongData result - ', result);
+
+      // TODO: logic to push result into previousSearchs if under 10. Do the same at API
+
+
+      this.pullLyrics(result.url);
+
     },
     onReset() {
       this.searchData.song = null;
+      this.searchData.artist = null;
       this.searchResults = null;
       this.songInputValidated = null;
+      this.artistInputValidated = null;
     },
     pullLyrics(url) {
       //let lyrics = null;
