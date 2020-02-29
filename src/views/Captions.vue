@@ -132,6 +132,21 @@ export default {
 
       return results;
     },
+    updateCachedSearches(result) {
+      let searches = this.$store.getters.previousSearchs;
+
+      if (searches.length < 7) { // append and update
+        searches.push(result);
+        this.$store.commit('setPreviousSearches', searches);
+      } else { // pop from top and push
+        searches.shift();
+        searches.push(result);
+        this.$store.commit('setPreviousSearches', searches);
+      }
+
+      this.pullLyrics(result.url);
+      this.getArtists(); // refreshes after new addition
+    },
     async onSubmit(evt) {
       evt.preventDefault();
       if (!this.searchData.song) {
@@ -161,12 +176,8 @@ export default {
 
       const result = await this.fetchSongData(this.searchData.song, this.searchData.artist, this.accessToken);
 
-      console.log('fetchSongData result - ', result);
-
-      // TODO: logic to push result into previousSearchs if under 10. Do the same at API
-
-
-      this.pullLyrics(result.url);
+      // TODO: Do the same at API as done below
+      this.updateCachedSearches(result);
 
     },
     onReset() {

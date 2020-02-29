@@ -10,7 +10,8 @@ export default new Vuex.Store({
   },
   mutations: {
     setPreviousSearches(state, value){
-      state.previousSearchs = value
+      state.previousSearchs = value;
+      localStorage.setItem('previousSearchs',JSON.stringify(value));
     },
     setCurrentLyrics(state, value){
       state.currentLyrics = value
@@ -43,7 +44,6 @@ export default new Vuex.Store({
         console.log(data);
         if(data.statusCode == 200){
           context.commit('setPreviousSearches',data.body); // set global value
-          localStorage.setItem('previousSearchs',JSON.stringify(data.body));
         }else{
           console.error(data);
         }
