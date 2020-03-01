@@ -5,7 +5,7 @@
   <h3>Welcome back {{$auth.user.given_name}}!</h3><br>
 
   <section class="">
-    <h6>We'll try to match what you searched for last time:</h6>
+    <h6>We'll suggest some of your recent searches:</h6>
     <!--<div id="prevWrapper" focus class="col-md-4 m-4 mx-auto">
       <div v-for="ps in this.$store.getters.previousSearchs" class="m-2">
         <strong v-b-toggle="'Song_'+ps.id" class="clickme"> {{ps.name}} by {{ps.Artist}} </strong>
@@ -37,18 +37,18 @@
       </b-form-group>
 
       <b-button type="submit" @click="onSubmit" @keyup.enter="onSubmit" variant="primary">Search</b-button>
-      <b-button type="reset" variant="danger">Reset</b-button>
+      <b-button type="reset" v-if="searchData.song" variant="danger">Reset</b-button>
     </b-form>
   </div>
 
   <div id="resultsContainer" v-if="$store.getters.currentLyrics" class="col-md-8 m-4 mx-auto">
+    <h5>Show song picture and Artist name?<br> Put displayed obj in $store. Pull values</h5>
     <strong>Lyrics:</strong><br>
     <strong v-for="(sr,index) in this.$store.getters.currentLyrics" :key="index">
       {{sr.content}} <br>
     </strong>
   </div>
 
-  <h5>Make terms and conditions in footer</h5><br><br>
 </div>
 </template>
 <script>
@@ -159,13 +159,12 @@ export default {
       }
       this.songInputValidated = null;
       this.artistInputValidated = null;
-      //console.log("searching for " + this.searchData.song + "...");
       //console.log(this.searchData.song);
-      // check if searched something already stored locally and display. If not, query wrapper
-      for (let p of this.$store.getters.previousSearchs) { // only five objects max. Not that bad
+      for (let p of this.$store.getters.previousSearchs) { // only seven objects max. Not that bad
         const ps = p;
-        //console.log(ps.name);
         if (ps.name.includes(this.searchData.song)) { // check if toUpper works with symbols in string
+          // TODO: store ps object in the store. Will be used to show song pic and artist
+
           await this.pullLyrics(ps.url); // pulls lyrics and stores in results
           return;
         }
@@ -175,7 +174,6 @@ export default {
 
       const result = await this.fetchSongData(this.searchData.song, this.searchData.artist, this.accessToken);
 
-      // TODO: Do the same at API as done below
       this.updateCachedSearches(result);
 
     },

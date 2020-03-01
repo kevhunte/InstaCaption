@@ -37,8 +37,10 @@
       </b-collapse>
     </b-navbar>
   </div>
-  <router-view />
-  <h3>----- Footer -----<br> Github and LinkedIn </h3>
+  <!--<transition name="router-anim">-->
+  <router-view id="router-view" class="animated fadeIn" />
+  <!--</transition>-->
+  <h3 id="footer">----- Footer -----<br> Terms and Conditions </h3>
 </div>
 </template>
 
@@ -87,6 +89,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+#router-view {
+  animation-duration: 1.6s;
+  /*animation-delay: 0.2s;*/
 }
 
 /*#nav {
