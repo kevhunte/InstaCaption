@@ -42,8 +42,8 @@
   </div>
 
   <div id="resultsContainer" v-if="$store.getters.currentLyrics" class="col-md-8 m-4 mx-auto">
-    <h5>Show song picture and Artist name?<br> Put displayed obj in $store. Pull values</h5>
-    <strong>Lyrics:</strong><br>
+    <b-img rounded="circle" style="max-width:2.5rem;" :src="this.$store.getters.songObj.image"></b-img>
+    <strong> {{this.$store.getters.songObj.name}} by {{this.$store.getters.songObj.Artist}}</strong><br>
     <strong v-for="(sr,index) in this.$store.getters.currentLyrics" :key="index">
       {{sr.content}} <br>
     </strong>
@@ -164,7 +164,7 @@ export default {
         const ps = p;
         if (ps.name.includes(this.searchData.song)) { // check if toUpper works with symbols in string
           // TODO: store ps object in the store. Will be used to show song pic and artist
-
+          this.$store.commit('setSongObj', ps);
           await this.pullLyrics(ps.url); // pulls lyrics and stores in results
           return;
         }

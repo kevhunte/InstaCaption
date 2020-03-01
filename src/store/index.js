@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     previousSearchs: null,
-    currentLyrics: null
+    currentLyrics: null,
+    songObj: null
   },
   mutations: {
     setPreviousSearches(state, value){
@@ -17,7 +18,10 @@ export default new Vuex.Store({
       localStorage.setItem('previousSearchs',JSON.stringify(value));
     },
     setCurrentLyrics(state, value){
-      state.currentLyrics = value
+      state.currentLyrics = value;
+    },
+    setSongObj(state, value){
+      state.songObj = value;
     }
   },
   actions: {
@@ -72,6 +76,7 @@ export default new Vuex.Store({
   },
   getters: {
     previousSearchs: state => state.previousSearchs,
-    currentLyrics: state => state.currentLyrics
+    currentLyrics: state => state.currentLyrics,
+    songObj: state => state.songObj
   }
 })
