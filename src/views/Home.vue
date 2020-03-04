@@ -6,19 +6,19 @@
     <b-carousel id="carousel-1" class="col-md-7 mx-auto m-2" v-model="slide" :interval="this.interval" fade indicators background="#ababab" img-width="1024" img-height="480" style="text-shadow: 1px 1px 2px #333;" @sliding-start="onSlideStart"
       @sliding-end="onSlideEnd" @mouseenter="onPause" @mouseleave="onResume">
 
-      <b-carousel-slide caption="Your Favorite Artists" :img-src="this.images[0]"></b-carousel-slide>
+      <b-carousel-slide caption="Your Favorite Artists" :img-src="this.$store.getters.images[0]"></b-carousel-slide>
 
 
-      <b-carousel-slide caption="And Their Lyrics" :img-src="this.images[1]"></b-carousel-slide>
+      <b-carousel-slide caption="And Their Lyrics" :img-src="this.$store.getters.images[1]"></b-carousel-slide>
 
 
-      <b-carousel-slide caption="Caption Ready" :img-src="this.images[2]"></b-carousel-slide>
+      <b-carousel-slide caption="Caption Ready" :img-src="this.$store.getters.images[2]"></b-carousel-slide>
 
 
-      <b-carousel-slide caption="At An Instant" :img-src="this.images[3]"></b-carousel-slide>
+      <b-carousel-slide caption="At An Instant" :img-src="this.$store.getters.images[3]"></b-carousel-slide>
 
 
-      <b-carousel-slide caption="Sign In And Enjoy" :img-src="this.images[4]">
+      <b-carousel-slide caption="Sign In And Enjoy" :img-src="this.$store.getters.images[4]">
       </b-carousel-slide>
 
     </b-carousel>
@@ -45,14 +45,7 @@ export default {
       sliding: null,
       slide: 0,
       interval: this.timer,
-      timer: 4000,
-      images: [
-        require('@/assets/RoddyRicch.jpg'),
-        require('@/assets/AriLennox.png'),
-        require('@/assets/KungFuKenny.jpg'),
-        require('@/assets/Jhene.jpg'),
-        require('@/assets/DaBaby.jpg')
-      ]
+      timer: 4000
     }
   },
   methods: {

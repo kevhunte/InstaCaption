@@ -7,7 +7,14 @@ export default new Vuex.Store({
   state: {
     previousSearchs: null,
     currentLyrics: null,
-    songObj: null
+    songObj: null,
+    images: [
+      require('@/assets/RoddyRicch.jpg'),
+      require('@/assets/AriLennox.png'),
+      require('@/assets/KungFuKenny.jpg'),
+      require('@/assets/Jhene.jpg'),
+      require('@/assets/DaBaby.jpg')
+    ]
   },
   mutations: {
     setPreviousSearches(state, value){
@@ -77,6 +84,7 @@ export default new Vuex.Store({
   getters: {
     previousSearchs: state => state.previousSearchs,
     currentLyrics: state => state.currentLyrics,
-    songObj: state => state.songObj
+    songObj: state => state.songObj,
+    images: state => state.images
   }
 })
