@@ -36,8 +36,11 @@
 
       </b-form-group>
 
-      <b-button type="submit" @click="onSubmit" @keyup.enter="onSubmit" variant="primary">Search</b-button>
-      <b-button type="reset" v-if="searchData.song" variant="danger">Reset</b-button>
+      <b-button type="submit" @click="onSubmit" @keyup.enter="onSubmit" :disable="isLoading" variant="primary">
+        <b-spinner v-if="isLoading" small label="Spinning"></b-spinner>
+        <div v-else>Search</div>
+      </b-button>
+      <b-button type="reset" v-if="searchData.song && !isLoading" variant="danger">Reset</b-button>
     </b-form>
   </div>
 
@@ -68,7 +71,8 @@ export default {
       songInputValidated: null,
       artistInputValidated: null,
       uniqueArtists: new Set(),
-      accessToken: null
+      accessToken: null,
+      isLoading: false
     }
   },
   watch: {
@@ -123,7 +127,11 @@ export default {
         });
         const data = await response.json();
         //console.log('fetchSongData - ', data.body);
-        return data.body;
+        if (data.statusCode === 200) {
+          return data.body;
+        } else {
+          return null;
+        }
       } catch (e) {
         console.log('error - ', e);
       }
@@ -142,7 +150,7 @@ export default {
         searches.push(result);
         this.$store.commit('setPreviousSearches', searches);
       }
-
+      this.$store.commit('setSongObj', result);
       this.pullLyrics(result.url);
       this.getArtists(); // refreshes after new addition
     },
@@ -150,32 +158,45 @@ export default {
       evt.preventDefault();
       if (!this.searchData.song) {
         // might want to add some type of regex in here too
-        //console.log('Invalid search');
         this.songInputValidated = false;
         return;
+      } else {
+        this.songInputValidated = null;
       }
       if (!this.searchData.artist) {
         this.artistInputValidated = false
+        return;
+      } else {
+        this.artistInputValidated = null;
       }
-      this.songInputValidated = null;
-      this.artistInputValidated = null;
-      //console.log(this.searchData.song);
+      this.isLoading = true; // activates spinner
       for (let p of this.$store.getters.previousSearchs) { // only seven objects max. Not that bad
         const ps = p;
         if (ps.name.includes(this.searchData.song)) { // check if toUpper works with symbols in string
-          // TODO: store ps object in the store. Will be used to show song pic and artist
           this.$store.commit('setSongObj', ps);
           await this.pullLyrics(ps.url); // pulls lyrics and stores in results
+
+          this.isLoading = false;
           return;
         }
       }
       console.log('Making call to AWS..');
       // if we get here we have to call API to get it
 
-      const result = await this.fetchSongData(this.searchData.song, this.searchData.artist, this.accessToken);
+      //cleanse out characters in artist and song
+      const song = this.searchData.song.replace(/[^a-zA-Z\d\s]+/g, "");
 
-      this.updateCachedSearches(result);
+      const artist = this.searchData.artist.replace(/[^a-zA-Z\d\s]+/g, "");
 
+      //console.log('sending ', song, 'by', artist);
+
+      const result = await this.fetchSongData(song, artist, this.accessToken);
+
+      if (result) {
+        await this.updateCachedSearches(result);
+      }
+
+      this.isLoading = false;
     },
     onReset() {
       this.searchData.song = null;
