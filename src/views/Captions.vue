@@ -52,6 +52,9 @@
     </h6>
   </div>
 
+  <div id="sleekShow">
+    <b-img rounded="circle" style="max-width:2.5rem;" v-for="ps in this.$store.getters.previousSearchs" :key="ps.name" :src="ps.image"></b-img>
+  </div>
   <!--<h5>
     Add rate limit to backend. If more than 5 in the same month, don't call api <br>
     More than month since last date, set to today and usage as 1.<br>
@@ -95,6 +98,7 @@ export default {
     },
     'searchData.artist': function(val) { // only shows on type
       if (val) {
+        this.getArtists();
         this.dataList2 = 'my-list-id2';
       } else {
         this.dataList2 = '';
@@ -102,13 +106,16 @@ export default {
     }
   },
   async created() {
-
-    if (typeof this.$store.getters.previousSearchs !== undefined) {
-      let claims = await this.$auth.getIdTokenClaims();
-      this.accessToken = claims.__raw;
-      // sets from cache or from API
-      this.getPreviousSearch(this.accessToken);
-      this.getArtists();
+    try {
+      if (typeof this.$store.getters.previousSearchs !== undefined) {
+        let claims = await this.$auth.getIdTokenClaims();
+        this.accessToken = claims.__raw;
+        // sets from cache or from API
+        this.getPreviousSearch(this.accessToken);
+        this.getArtists();
+      }
+    } catch (e) {
+      console.log('Error on created - ', e);
     }
     //console.log('token - ', this.accessToken);
   },
