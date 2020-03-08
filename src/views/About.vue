@@ -2,13 +2,16 @@
 <div class="about page">
   <!--<h3>About the Creator</h3>-->
   <div id="content" class="">
-    <h6 class="fl">
-      <b-img rounded="circle" style="max-width:2rem;" :src="this.profilePic"></b-img>
-      Kevin
-      <a href="https://www.linkedin.com/in/kevin-hunte-818759115/" target="_blank">
-        <b-img style="max-width:2.5rem;" :src="this.LinkedIn"></b-img>
-      </a>
-    </h6>
+
+    <div id="profileContainer" class="col-md-8 mx-auto mt-3">
+      <h6 class="text-left">
+        <b-img rounded="circle" style="max-width:2rem;" :src="this.profilePic"></b-img>
+        Kevin
+        <a href="https://www.linkedin.com/in/kevin-hunte-818759115/" target="_blank">
+          <b-img style="max-width:2.5rem;" :src="this.LinkedIn"></b-img>
+        </a>
+      </h6>
+    </div>
     <h6 class="col-md-8 mx-auto m-3">
       <h5>What InstaCaption does and how to use it.</h5>
       <div class="m-3">
@@ -22,7 +25,7 @@
     </h6>
     <h6 class="col-md-10 mx-auto m-3">
       <br>
-      <h5>Other projects worth checking out (Use your API. Add to $store to save call)</h5><br>
+      <h5>Other projects worth checking out (Use projects API. Add to $store to save call)</h5><br>
       Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
       irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </h6>
