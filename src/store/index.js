@@ -70,7 +70,6 @@ export default new Vuex.Store({
       try{
         // send to server, then delete local copy. Make method async
         localStorage.removeItem('previousSearchs');
-        context.commit('setPreviousSearches',null);
       }
       catch(e){
         console.log('error when deleting previous searches...\n'+e);

@@ -2,7 +2,7 @@
 <div id="Captions" class="captions page">
   <h1 v-if="!$auth.isAuthenticated">Unauthenticated! Should not be seeing this page</h1>
 
-  <h3>Welcome back {{$auth.user.given_name}}!</h3><br>
+  <h4>Welcome back {{$auth.user.given_name}}</h4><br>
 
   <section class="">
     <h6>We'll suggest some of your recent searches:</h6>
@@ -19,14 +19,14 @@
   <div id="form-container" class="col-md-6 mx-auto m-2">
     <b-form @reset="onReset">
       <b-form-group id="input-group-1" label="" label-for="input-1" description="The world is yours.">
-        <b-form-input id="song_input" v-model="searchData.song" :state="songInputValidated" type="search" autocomplete="off" placeholder="Enter a song" :list="dataList">
+        <b-form-input id="song_input" v-model="searchData.song" :state="songInputValidated" type="search" autocomplete="off" placeholder="Enter a song*" :list="dataList">
         </b-form-input>
 
         <datalist id="my-list-id" class="col-md-6 mx-auto">
           <option v-for="ps in this.$store.getters.previousSearchs">{{ ps.name }}</option>
         </datalist>
 
-        <b-form-input id="artist_input" class="mt-2" v-model="searchData.artist" :state="artistInputValidated" type="search" autocomplete="off" placeholder="Enter an artist" :list="dataList2">
+        <b-form-input id="artist_input" class="mt-2" v-model="searchData.artist" :state="artistInputValidated" type="search" autocomplete="off" placeholder="Enter an artist*" :list="dataList2">
         </b-form-input>
 
         <!--This may have repeats. Have to loop through and make a set-->
@@ -44,13 +44,22 @@
     </b-form>
   </div>
 
-  <div id="resultsContainer" v-if="$store.getters.currentLyrics" class="col-md-8 m-4 mx-auto">
+  <div id="resultsContainer" v-if="$store.getters.currentLyrics" class="col-md-6 m-4 mx-auto">
     <b-img rounded="circle" style="max-width:2.5rem;" :src="this.$store.getters.songObj.image"></b-img>
-    <strong> {{this.$store.getters.songObj.name}} by {{this.$store.getters.songObj.Artist}}</strong><br>
-    <strong v-for="(sr,index) in this.$store.getters.currentLyrics" :key="index">
+    <strong> {{this.$store.getters.songObj.name}} by {{this.$store.getters.songObj.Artist}}</strong><br><br>
+    <h6 v-for="(sr,index) in this.$store.getters.currentLyrics" :key="index">
       {{sr.content}} <br>
-    </strong>
+    </h6>
   </div>
+
+  <!--<h5>
+    Add rate limit to backend. If more than 5 in the same month, don't call api <br>
+    More than month since last date, set to today and usage as 1.<br>
+    Within a month -> (def diff_month(d1, d2):
+    return (d1.year - d2.year) * 12 + d1.month - d2.month == 0), check usage num. <br>
+    - If under 5, inc the usage and make call. <br>
+    Else return 400 and say usage has been hit
+  </h5>-->
 
 </div>
 </template>
@@ -126,10 +135,11 @@ export default {
           }
         });
         const data = await response.json();
-        //console.log('fetchSongData - ', data.body);
+        //console.log('fetchSongData - ', data);
         if (data.statusCode === 200) {
           return data.body;
         } else {
+          console.log('No song returned');
           return null;
         }
       } catch (e) {
@@ -184,9 +194,9 @@ export default {
       // if we get here we have to call API to get it
 
       //cleanse out characters in artist and song
-      const song = this.searchData.song.replace(/[^a-zA-Z\d\s]+/g, "");
+      const song = this.searchData.song.replace(/[^a-zA-Z0-9\d\s]+/g, "");
 
-      const artist = this.searchData.artist.replace(/[^a-zA-Z\d\s]+/g, "");
+      const artist = this.searchData.artist.replace(/[^a-zA-Z0-9\d\s]+/g, "");
 
       //console.log('sending ', song, 'by', artist);
 

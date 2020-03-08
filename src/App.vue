@@ -40,7 +40,11 @@
   <!--<transition name="router-anim">-->
   <router-view id="router-view" class="animated fadeIn" />
   <!--</transition>-->
-  <h3 id="footer">----- Footer -----<br> Terms and Conditions </h3>
+  <h6 id="footer">
+    <div class="mt-4 mb-5">
+      Foul play is grounds for suspension from InstaCaption. <br><br> For more information, contact the creator.
+    </div>
+  </h6>
 </div>
 </template>
 
@@ -66,6 +70,12 @@ export default {
     BIconList,
     BIconLock
   },
+  created() {
+    if (!this.$auth.isAuthenticated) {
+      // security
+      this.$store.dispatch('saveAndClearPreviousSearch');
+    }
+  },
   methods: {
     login() {
       this.$auth.loginWithRedirect();
@@ -76,7 +86,7 @@ export default {
       this.$auth.logout({
         returnTo: window.location.origin
       });
-      console.log("Signed Out!");
+      //console.log("Signed Out!");
     }
   }
 }
@@ -94,6 +104,12 @@ export default {
 #router-view {
   animation-duration: 1.6s;
   /*animation-delay: 0.2s;*/
+}
+
+#footer {
+  /*border-top-style: solid;
+  border-width: thin;*/
+  font-size: 0.6rem;
 }
 
 /*#nav {
