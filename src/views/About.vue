@@ -25,15 +25,25 @@
     </h6>
     <h6 class="col-md-10 mx-auto m-3">
       <br>
-      <h5>Other projects worth checking out (Use projects API. Add to $store to save call)</h5><br>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-      irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      <h5>Other projects worth checking out</h5>
+      <div id="projectsContainer">
+        <b-card id="card" v-if="counter === index" v-for="(ps,index) in this.$store.getters.projects" :key="ps.id" :title="ps.Text" class="col-md-5 mb-2 mx-auto animated fadeIn">
+          <b-card-text>
+            Blurb for project here for now
+          </b-card-text>
+          <a class="link" :href="ps.URL" target="_blank" rel="noopener">
+            View repository
+          </a>
+        </b-card>
+        <b-progress class="w-50 mx-auto m-2" :value="counter" :max="this.$store.getters.projects.length - 1"></b-progress>
+        <b-button @click="incCounter" variant="primary">Next</b-button>
+      </div>
     </h6>
     <h6 class="col-md-8 mx-auto m-3">
       <br>
       <div class="m-3">
         Currently, we only keep track of the <b><i>last seven songs</i></b> you have searched for. We do this for your convenience.
-        If you're new and that doesn't make sense, it will once you sign in. This can be done by selecting the Captions tab in the header above.
+        If you're new and this doesn't seem fully clear, it will once you sign in. This can be done by selecting the Captions tab in the navigation bar above.
       </div>
       <div>
         In order to help us find the right song you are looking for, try your best to spell the song and artist correctly.
@@ -51,11 +61,34 @@ export default {
   data() {
     return {
       profilePic: require('@/assets/Kev.jpg'),
-      LinkedIn: require('@/assets/LinkedIn.png')
+      LinkedIn: require('@/assets/LinkedIn.png'),
+      counter: 0
+    }
+  },
+  created() {
+    //console.log('getting projects...');
+    try {
+      this.$store.dispatch('getProjects'); // get github projects
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  methods: {
+    incCounter() {
+      let val = (this.counter + 1) % this.$store.getters.projects.length;
+      //console.log('counter\'s new val - ', val);
+      this.counter = val;
     }
   }
 }
 </script>
 
 <style scoped>
+#card {
+  animation-duration: 1.2s;
+}
+
+.link:hover {
+  text-decoration: none;
+}
 </style>

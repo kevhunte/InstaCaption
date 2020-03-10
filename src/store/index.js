@@ -14,7 +14,8 @@ export default new Vuex.Store({
       require('@/assets/KungFuKenny.jpg'),
       require('@/assets/Jhene.jpg'),
       require('@/assets/DaBaby.jpg')
-    ]
+    ],
+    projects: null
   },
   mutations: {
     setPreviousSearches(state, value){
@@ -29,6 +30,9 @@ export default new Vuex.Store({
     },
     setSongObj(state, value){
       state.songObj = value;
+    },
+    setProjects(state, value){
+      state.projects = value;
     }
   },
   actions: {
@@ -78,12 +82,24 @@ export default new Vuex.Store({
     setCurrentSearch(context, value){
       console.log('storing current search..');
       context.commit('setCurrentLyrics',value); // sets
+    },
+    async getProjects({commit, state}){
+      if(!state.projects){
+        console.log('making call to projects api...');
+
+        const response = await fetch('https://b5w5u1jr79.execute-api.us-east-1.amazonaws.com/Dev');
+        const data = await response.json();
+        console.log('got projects - ',data);
+        commit('setProjects',data.body);
+      }
+      // else already set
     }
   },
   getters: {
     previousSearchs: state => state.previousSearchs,
     currentLyrics: state => state.currentLyrics,
     songObj: state => state.songObj,
-    images: state => state.images
+    images: state => state.images,
+    projects: state => state.projects
   }
 })

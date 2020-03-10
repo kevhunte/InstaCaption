@@ -16,7 +16,7 @@
       </div>
     </div>-->
   </section>
-  <div id="form-container" class="col-md-6 mx-auto m-2">
+  <div id="form-container" class="col-md-5 mx-auto m-2">
     <b-form @reset="onReset">
       <b-form-group id="input-group-1" label="" label-for="input-1" description="The world is yours.">
         <b-form-input id="song_input" v-model="searchData.song" :state="songInputValidated" type="search" autocomplete="off" placeholder="Enter a song*" :list="dataList">
