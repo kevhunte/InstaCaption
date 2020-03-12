@@ -8,8 +8,6 @@
     <b-navbar id="navbar" type="dark" variant="dark" class="fixed-top">
       <b-navbar-brand to="/">InstaCaption</b-navbar-brand>
 
-      <!--<b-navbar-toggle target="nav-collapse"></b-navbar-toggle>-->
-
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
           <b-nav-item to="/about">About</b-nav-item>
@@ -52,7 +50,7 @@
 import {
   BIconList,
   BIconLock
-} from 'bootstrap-vue'
+} from 'bootstrap-vue/src/icons'
 
 export default {
   name: 'app',
