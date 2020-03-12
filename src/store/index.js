@@ -47,7 +47,7 @@ export default new Vuex.Store({
         }
       }
       else{
-        console.log('fetching previous searches..');
+        //console.log('fetching previous searches..');
 
         const response = await fetch('https://onifxs3yxf.execute-api.us-east-1.amazonaws.com/dev/',{
           headers:{
@@ -59,7 +59,7 @@ export default new Vuex.Store({
         */
         const data = await response.json();
         //console.log(data.body);
-        console.log(data);
+        //console.log(data);
         if(data.statusCode == 200){
           context.commit('setPreviousSearches',data.body); // set global value
         }else{
@@ -69,27 +69,27 @@ export default new Vuex.Store({
       }
     },
     saveAndClearPreviousSearch(context){
-      console.log('clearing previous searches');
+      //console.log('clearing previous searches');
       //call on logout or timeout to save latest changes
       try{
         // send to server, then delete local copy. Make method async
         localStorage.removeItem('previousSearchs');
       }
       catch(e){
-        console.log('error when deleting previous searches...\n'+e);
+        //console.log('error when deleting previous searches...\n'+e);
       }
     },
     setCurrentSearch(context, value){
-      console.log('storing current search..');
+      //console.log('storing current search..');
       context.commit('setCurrentLyrics',value); // sets
     },
     async getProjects({commit, state}){
       if(!state.projects){
-        console.log('making call to projects api...');
+        //console.log('making call to projects api...');
 
         const response = await fetch('https://b5w5u1jr79.execute-api.us-east-1.amazonaws.com/Dev');
         const data = await response.json();
-        console.log('got projects - ',data);
+        //console.log('got projects - ',data);
         commit('setProjects',data.body);
       }
       // else already set

@@ -115,7 +115,7 @@ export default {
         this.getArtists();
       }
     } catch (e) {
-      console.log('Error on created - ', e);
+      //console.log('Error on created - ', e);
     }
     //console.log('token - ', this.accessToken);
   },
@@ -146,11 +146,11 @@ export default {
         if (data.statusCode === 200) {
           return data.body;
         } else {
-          console.log('No song returned');
+          //console.log('No song returned');
           return null;
         }
       } catch (e) {
-        console.log('error - ', e);
+        //console.log('error - ', e);
       }
 
 
@@ -197,7 +197,7 @@ export default {
           return;
         }
       }
-      console.log('Making call to AWS..');
+      //console.log('Making call to AWS..');
       // if we get here we have to call API to get it
 
       //cleanse out characters in artist and song

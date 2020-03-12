@@ -77,7 +77,7 @@ export default {
   methods: {
     login() {
       this.$auth.loginWithRedirect();
-      console.log("Signed In");
+      //console.log("Signed In");
     },
     logout() {
       this.$store.dispatch('saveAndClearPreviousSearch');

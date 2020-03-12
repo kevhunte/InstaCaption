@@ -70,7 +70,7 @@ export default {
     try {
       this.$store.dispatch('getProjects'); // get github projects
     } catch (e) {
-      console.log(e);
+      //console.log(e);
     }
   },
   methods: {
@@ -80,7 +80,7 @@ export default {
         //console.log('counter\'s new val - ', val);
         this.counter = val;
       } catch (e) {
-        console.log('error on incCounter:', e);
+        //console.log('error on incCounter:', e);
       }
     }
   }
