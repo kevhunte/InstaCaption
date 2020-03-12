@@ -5,10 +5,10 @@
 
     <div id="profileContainer" class="col-md-8 mx-auto mt-3">
       <h6 class="text-left">
-        <b-img rounded="circle" style="max-width:2rem;" :src="this.profilePic"></b-img>
+        <img class="rounded-circle" style="max-width:2rem;" :src="this.profilePic"></img>
         Kevin
         <a href="https://www.linkedin.com/in/kevin-hunte-818759115/" target="_blank">
-          <b-img style="max-width:2.5rem;" :src="this.LinkedIn"></b-img>
+          <img style="max-width:2.5rem;" :src="this.LinkedIn"></img>
         </a>
       </h6>
     </div>

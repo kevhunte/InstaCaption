@@ -45,7 +45,7 @@
   </div>
 
   <div id="resultsContainer" v-if="$store.getters.currentLyrics" class="col-md-6 m-4 mx-auto">
-    <b-img rounded="circle" style="max-width:2.5rem;" :src="this.$store.getters.songObj.image"></b-img>
+    <img class="rounded-circle" style="max-width:2.5rem;" :src="this.$store.getters.songObj.image"></img>
     <strong> {{this.$store.getters.songObj.name}} by {{this.$store.getters.songObj.Artist}}</strong><br><br>
     <h6 v-for="(sr,index) in this.$store.getters.currentLyrics" :key="index">
       {{sr.content}} <br>
@@ -53,7 +53,7 @@
   </div>
 
   <div id="sleekShow">
-    <b-img rounded="circle" style="max-width:2.5rem;" v-for="ps in this.$store.getters.previousSearchs" :key="ps.name" :src="ps.image"></b-img>
+    <img class="rounded-circle" style="max-width:2.5rem;" v-for="ps in this.$store.getters.previousSearchs" :key="ps.name" :src="ps.image"></img>
   </div>
   <!--<h5>
     Add rate limit to backend. If more than 5 in the same month, don't call api <br>
