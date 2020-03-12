@@ -7,13 +7,15 @@ const DEFAULT_REDIRECT_CALLBACK = () =>
 
 let instance;
 
+let currUri = process.env.NODE_ENV === "production" ? 'https://instacaptions.s3.amazonaws.com/index.html#/' : window.location.origin;
+
 /** Returns the current instance of the SDK */
 export const getInstance = () => instance;
 
 /** Creates an instance of the Auth0 SDK. If one has already been created, it returns that instance */
 export const useAuth0 = ({
   onRedirectCallback = DEFAULT_REDIRECT_CALLBACK,
-  redirectUri = 'https://instacaptions.s3.amazonaws.com/index.html#/', //window.location.origin,
+  redirectUri = currUri,//'https://instacaptions.s3.amazonaws.com/index.html#/', //window.location.origin,
   ...options
 }) => {
   if (instance) return instance;

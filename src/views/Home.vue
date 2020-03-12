@@ -3,7 +3,7 @@
   <!--<h1 id="Homeheader" class="">InstaCaption</h1>-->
   <!--Change font here-->
   <div id="carousel">
-    <b-carousel id="carousel-1" class="col-md-6 mx-auto m-2" v-model="slide" :interval="this.interval" fade indicators background="#ababab" img-width="1024" img-height="480" style="text-shadow: 1px 1px 2px #333;" @sliding-start="onSlideStart"
+    <b-carousel id="carousel-1" class="col-md-5 mx-auto m-2" v-model="slide" :interval="this.interval" fade indicators background="#ababab" img-width="1024" img-height="480" style="text-shadow: 1px 1px 2px #333;" @sliding-start="onSlideStart"
       @sliding-end="onSlideEnd" @mouseenter="onPause" @mouseleave="onResume">
 
       <b-carousel-slide caption="Your Favorite Artists" :img-src="this.$store.getters.images[0]"></b-carousel-slide>
@@ -23,7 +23,7 @@
 
     </b-carousel>
   </div>
-  <div class="col-md-7 mx-auto mt-5">
+  <div class="col-md-6 mx-auto mt-5">
     <h6>
       If you have any unanswered questions, check out the <b @click="toAboutPage">About page</b>
       and see if that helps.

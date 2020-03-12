@@ -66,7 +66,7 @@ export default {
     }
   },
   created() {
-    //console.log('getting projects...');
+    console.log('environment is...', process.env.NODE_ENV);
     try {
       this.$store.dispatch('getProjects'); // get github projects
     } catch (e) {

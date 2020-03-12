@@ -16,3 +16,15 @@
     <!-- built files will be auto injected -->
   </body>
 </html>
+<script>
+navigator.serviceWorker.getRegistrations().then(
+
+  function(registrations) {
+
+      for(let registration of registrations) {
+          registration.unregister();
+
+      }
+
+});
+</script>

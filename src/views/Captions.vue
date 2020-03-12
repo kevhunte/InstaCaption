@@ -44,6 +44,12 @@
     </b-form>
   </div>
 
+  <div id="UXmessageContainer">
+    <h6 class="col-md-m6 mx-auto m-3 text-danger">
+      {{this.UXmessage}}
+    </h6>
+  </div>
+
   <div id="resultsContainer" v-if="$store.getters.currentLyrics" class="col-md-6 m-4 mx-auto">
     <img class="rounded-circle" style="max-width:2.5rem;" :src="this.$store.getters.songObj.image"></img>
     <strong> {{this.$store.getters.songObj.name}} by {{this.$store.getters.songObj.Artist}}</strong><br><br>
@@ -84,11 +90,13 @@ export default {
       artistInputValidated: null,
       uniqueArtists: new Set(),
       accessToken: null,
-      isLoading: false
+      isLoading: false,
+      UXmessage: null
     }
   },
   watch: {
     'searchData.song': function(val) { // only shows on type
+      this.UXmessage = null;
       if (val) {
         this.dataList = 'my-list-id';
       } else {
@@ -97,6 +105,7 @@ export default {
       //return val ? this.songInputValidated = true : this.songInputValidated = false; // state validation
     },
     'searchData.artist': function(val) { // only shows on type
+      this.UXmessage = null;
       if (val) {
         this.getArtists();
         this.dataList2 = 'my-list-id2';
@@ -143,11 +152,19 @@ export default {
         });
         const data = await response.json();
         //console.log('fetchSongData - ', data);
+
+        // 404 => couldn't be found
+        // 500 => ask user to reload
+
         if (data.statusCode === 200) {
           return data.body;
-        } else {
+        } else if (data.statusCode === 404) {
           //console.log('No song returned');
-          return null;
+          this.UXmessage = 'Sorry, we couldn\'t find your song :( Try spelling the artist\'s name differently? It that doesn\'t work, we may not have it.';
+          return results;
+        } else if (data.statusCode === 500) {
+          this.UXmessage = 'Sorry, something went wrong. It may be fixed if you reload your page. If that doesn\'t work, contact the creator.';
+          return results;
         }
       } catch (e) {
         //console.log('error - ', e);
@@ -206,14 +223,22 @@ export default {
       const artist = this.searchData.artist.replace(/[^a-zA-Z0-9\d\s]+/g, "");
 
       //console.log('sending ', song, 'by', artist);
+      try {
 
-      const result = await this.fetchSongData(song, artist, this.accessToken);
+        const result = await this.fetchSongData(song, artist, this.accessToken);
 
-      if (result) {
-        await this.updateCachedSearches(result);
+        //this.loading = false;
+
+        if (result) {
+          await this.updateCachedSearches(result);
+        }
+        this.loading = false;
+      } catch (e) {
+
+      } finally {
+        // show that call failed
+        this.isLoading = false;
       }
-
-      this.isLoading = false;
     },
     onReset() {
       this.searchData.song = null;
@@ -221,6 +246,7 @@ export default {
       this.searchResults = null;
       this.songInputValidated = null;
       this.artistInputValidated = null;
+      this.UXmessage = null;
     },
     pullLyrics(url) {
       //let lyrics = null;

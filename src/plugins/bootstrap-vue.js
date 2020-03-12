@@ -3,7 +3,7 @@ import Vue from 'vue'
 //import BootstrapVue from 'bootstrap-vue'
 import {CardPlugin, ButtonPlugin, CarouselPlugin, FormPlugin, FormInputPlugin, FormGroupPlugin, NavbarPlugin, ProgressPlugin, SpinnerPlugin} from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
-//import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // Make sure this works
 
