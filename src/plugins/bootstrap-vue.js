@@ -1,7 +1,20 @@
 import Vue from 'vue'
 
-import BootstrapVue from 'bootstrap-vue'
+//import BootstrapVue from 'bootstrap-vue'
+import {CardPlugin, ButtonPlugin, CarouselPlugin, FormPlugin, ImagePlugin, NavbarPlugin, ProgressPlugin, SpinnerPlugin} from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 //import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-Vue.use(BootstrapVue)
+// Make sure this works
+
+
+//Vue.use(BootstrapVue)
+
+Vue.use(CardPlugin)
+Vue.use(ButtonPlugin)
+Vue.use(CarouselPlugin)
+Vue.use(FormPlugin)
+Vue.use(ImagePlugin)
+Vue.use(NavbarPlugin)
+Vue.use(ProgressPlugin)
+Vue.use(SpinnerPlugin)
