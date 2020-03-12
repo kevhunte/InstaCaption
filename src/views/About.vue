@@ -29,7 +29,7 @@
       <div id="projectsContainer">
         <b-card id="card" v-if="counter === index" v-for="(ps,index) in this.$store.getters.projects" :key="ps.id" :title="ps.Text" class="col-md-5 mb-2 mx-auto animated fadeIn">
           <b-card-text>
-            Blurb for project here for now
+            {{ps.Blurb}}
           </b-card-text>
           <a class="link" :href="ps.URL" target="_blank" rel="noopener">
             View repository
@@ -75,9 +75,13 @@ export default {
   },
   methods: {
     incCounter() {
-      let val = (this.counter + 1) % this.$store.getters.projects.length;
-      //console.log('counter\'s new val - ', val);
-      this.counter = val;
+      try {
+        let val = (this.counter + 1) % this.$store.getters.projects.length;
+        //console.log('counter\'s new val - ', val);
+        this.counter = val;
+      } catch (e) {
+        console.log('error on incCounter:', e);
+      }
     }
   }
 }
