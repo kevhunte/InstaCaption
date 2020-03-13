@@ -153,10 +153,8 @@ export default {
         const data = await response.json();
         //console.log('fetchSongData - ', data);
 
-        // 404 => couldn't be found
-        // 500 => ask user to reload
-
         if (data.statusCode === 200) {
+          this.UXmessage = null;
           return data.body;
         } else if (data.statusCode === 404) {
           //console.log('No song returned');
