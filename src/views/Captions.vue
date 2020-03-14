@@ -157,10 +157,13 @@ export default {
           return data.body;
         } else if (data.statusCode === 404) {
           //console.log('No song returned');
-          this.UXmessage = 'Sorry, we couldn\'t find your song :( Try spelling the artist\'s name differently? It that doesn\'t work, we may not have it.';
+          this.UXmessage = 'Sorry, we couldn\'t find your song. Try spelling the artist\'s name differently? If that doesn\'t work, we may not have it.';
+          return results;
+        } else if (data.statusCode === 406) {
+          this.UXmessage = 'Please verify your email before continuing';
           return results;
         } else if (data.statusCode === 500) {
-          this.UXmessage = 'Sorry, something went wrong. It may be fixed if you reload your page. If that doesn\'t work, contact the creator.';
+          this.UXmessage = 'Sorry, something went wrong on our side. For more detail, contact the creator.';
           return results;
         }
       } catch (e) {
