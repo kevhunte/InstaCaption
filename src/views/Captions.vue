@@ -151,7 +151,6 @@ export default {
           }
         });
         const data = await response.json();
-        //console.log('fetchSongData - ', data);
 
         if (data.statusCode === 200) {
           this.UXmessage = null;
@@ -173,16 +172,24 @@ export default {
     },
     updateCachedSearches(result) {
       let searches = this.$store.getters.previousSearchs;
-
-      if (searches.length < 7) { // append and update
-        searches.push(result);
-        this.$store.commit('setPreviousSearches', searches);
-      } else { // pop from top and push
-        searches.shift();
-        searches.push(result);
-        this.$store.commit('setPreviousSearches', searches);
+      console.log('updateCachedSearches:', result);
+      if (searches) { // only if exists
+        if (searches.length < 7) { // append and update
+          searches.push(result);
+          this.$store.commit('setPreviousSearches', searches);
+        } else { // pop from top and push
+          searches.shift();
+          searches.push(result);
+          this.$store.commit('setPreviousSearches', searches);
+        }
+      } else {
+        let arr = [];
+        arr.push(result);
+        console.log('No previous');
+        this.$store.commit('setPreviousSearches', arr);
       }
       this.$store.commit('setSongObj', result);
+      console.log('made it');
       this.pullLyrics(result.url);
       this.getArtists(); // refreshes after new addition
     },
@@ -202,14 +209,16 @@ export default {
         this.artistInputValidated = null;
       }
       this.isLoading = true; // activates spinner
-      for (let p of this.$store.getters.previousSearchs) { // only seven objects max. Not that bad
-        const ps = p;
-        if (ps.name.includes(this.searchData.song)) { // check if toUpper works with symbols in string
-          this.$store.commit('setSongObj', ps);
-          await this.pullLyrics(ps.url); // pulls lyrics and stores in results
+      if (this.$store.getters.previousSearchs) { // don't bother if there is none
+        for (let p of this.$store.getters.previousSearchs) { // only seven objects max. Not that bad
+          const ps = p;
+          if (ps.name.includes(this.searchData.song)) { // check if toUpper works with symbols in string
+            this.$store.commit('setSongObj', ps);
+            await this.pullLyrics(ps.url); // pulls lyrics and stores in results
 
-          this.isLoading = false;
-          return;
+            this.isLoading = false;
+            return;
+          }
         }
       }
       //console.log('Making call to AWS..');
@@ -226,6 +235,7 @@ export default {
         const result = await this.fetchSongData(song, artist, this.accessToken);
 
         //this.loading = false;
+        //console.log('result - ', result)
 
         if (result) {
           await this.updateCachedSearches(result);
