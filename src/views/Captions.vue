@@ -230,7 +230,7 @@ export default {
       //cleanse out characters in artist and song
       const song = this.searchData.song.replace(/[^a-zA-Z0-9\d\s]+/g, "");
 
-      const artist = this.searchData.artist.replace(/[^a-zA-Z0-9\d\s]+/g, "");
+      const artist = this.searchData.artist; //.replace(/[^a-zA-Z0-9\d\s]+/g, "");
 
       //console.log('sending ', song, 'by', artist);
       try {

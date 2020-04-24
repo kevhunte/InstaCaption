@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import Captions from '../views/Captions.vue'
+//import Home from '../views/Home.vue'
+//import Captions from '../views/Captions.vue'
 import { authGuard } from '../auth/authGuard'
 
 Vue.use(VueRouter)
@@ -10,7 +10,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: () => import('../views/Home.vue') // Home
   },
   {
     path: '/about',
@@ -23,7 +23,7 @@ const routes = [
   {
     path:'/captions',
     name:'captions',
-    component: Captions,
+    component: () => import('../views/Captions.vue'),
     beforeEnter: authGuard
   }
 ]

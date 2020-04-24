@@ -19,7 +19,7 @@
         This done with a sleek, minimal UI that gets straight to the point.
       </div>
       <div>
-        InstaCaption works by having each person sign in either with their Facebook or Google account. If you have neither, you can make a new login with us.
+        InstaCaption works by having each person sign in with their Google account. If you do not have a Google account, you can make a new login with us.
         InstaCaption gives you your lyrics on any device. It updates in real time with the lyrics you want.
       </div>
     </h6>
@@ -35,7 +35,7 @@
             View repository
           </a>
         </b-card>
-        <b-progress class="w-50 mx-auto m-2" :value="counter" :max="this.$store.getters.projects.length - 1"></b-progress>
+        <b-progress v-if="this.$store.getters.projects.length" class="w-50 mx-auto m-2" :value="counter" :max="this.$store.getters.projects.length - 1"></b-progress>
         <b-button @click="incCounter" variant="primary">Next</b-button>
       </div>
     </h6>
@@ -66,7 +66,7 @@ export default {
     }
   },
   created() {
-    console.log('environment is...', process.env.NODE_ENV);
+    //console.log('environment is...', process.env.NODE_ENV);
     try {
       this.$store.dispatch('getProjects'); // get github projects
     } catch (e) {
