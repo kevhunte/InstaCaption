@@ -6,15 +6,6 @@
 
   <section class="">
     <h6>We'll suggest some of your recent searches:</h6>
-    <!--<div id="prevWrapper" focus class="col-md-4 m-4 mx-auto">
-      <div v-for="ps in this.$store.getters.previousSearchs" class="m-2">
-        <strong v-b-toggle="'Song_'+ps.id" class="clickme"> {{ps.name}} by {{ps.Artist}} </strong>
-        <br>
-        <b-collapse :id="'Song_'+ps.id" class="mt-2">
-          <h6 style="font-size:1.2rem;">{{ps.Lyrics}}</h6>
-        </b-collapse>
-      </div>
-    </div>-->
   </section>
   <div id="form-container" class="col-md-5 mx-auto m-2">
     <b-form @reset="onReset">
@@ -51,6 +42,7 @@
   </div>
 
   <div id="resultsContainer" v-if="$store.getters.currentLyrics" class="col-md-6 m-4 mx-auto">
+    <h6 style="font-size:0.7rem;">The below lyrics are not property of InstaCaption</h6>
     <img class="rounded-circle" style="max-width:2.5rem;" :src="this.$store.getters.songObj.image"></img>
     <strong> {{this.$store.getters.songObj.name}} by {{this.$store.getters.songObj.Artist}}</strong><br><br>
     <h6 v-for="(sr,index) in this.$store.getters.currentLyrics" :key="index">
@@ -59,16 +51,8 @@
   </div>
 
   <div id="sleekShow">
-    <img class="rounded-circle" style="max-width:2.5rem;" v-for="ps in this.$store.getters.previousSearchs" :key="ps.name" :src="ps.image"></img>
+    <img @click="handleSongObjectLyrics(ps,250)" class="rounded-circle" style="max-width:2.5rem;" v-for="ps in this.$store.getters.previousSearchs" :key="ps.name" :src="ps.image"></img>
   </div>
-  <!--<h5>
-    Add rate limit to backend. If more than 5 in the same month, don't call api <br>
-    More than month since last date, set to today and usage as 1.<br>
-    Within a month -> (def diff_month(d1, d2):
-    return (d1.year - d2.year) * 12 + d1.month - d2.month == 0), check usage num. <br>
-    - If under 5, inc the usage and make call. <br>
-    Else return 400 and say usage has been hit
-  </h5>-->
 
 </div>
 </template>
@@ -175,7 +159,7 @@ export default {
     },
     updateCachedSearches(result) {
       let searches = this.$store.getters.previousSearchs;
-      console.log('updateCachedSearches:', result);
+      //console.log('updateCachedSearches:', result);
       if (searches) { // only if exists
         if (searches.length < 7) { // append and update
           searches.push(result);
@@ -188,11 +172,11 @@ export default {
       } else {
         let arr = [];
         arr.push(result);
-        console.log('No previous');
+        //console.log('No previous');
         this.$store.commit('setPreviousSearches', arr);
       }
       this.$store.commit('setSongObj', result);
-      console.log('made it');
+      //console.log('made it');
       this.pullLyrics(result.url);
       this.getArtists(); // refreshes after new addition
     },
@@ -216,9 +200,7 @@ export default {
         for (let p of this.$store.getters.previousSearchs) { // only seven objects max. Not that bad
           const ps = p;
           if (ps.name.includes(this.searchData.song)) { // check if toUpper works with symbols in string
-            this.$store.commit('setSongObj', ps);
-            await this.pullLyrics(ps.url); // pulls lyrics and stores in results
-
+            this.handleSongObjectLyrics(ps);
             this.isLoading = false;
             return;
           }
@@ -230,7 +212,7 @@ export default {
       //cleanse out characters in artist and song
       const song = this.searchData.song.replace(/[^a-zA-Z0-9\d\s]+/g, "");
 
-      const artist = this.searchData.artist; //.replace(/[^a-zA-Z0-9\d\s]+/g, "");
+      const artist = this.searchData.artist.trim(); //.replace(/[^a-zA-Z0-9\d\s]+/g, "");
 
       //console.log('sending ', song, 'by', artist);
       try {
@@ -250,6 +232,17 @@ export default {
         // show that call failed
         this.isLoading = false;
       }
+    },
+    async handleSongObjectLyrics(ps, debounce = null) {
+      // handler to update object and fetch lyrics
+      if (debounce) {
+        setTimeout((x) => x = x, debounce);
+      }
+
+      this.$store.commit('setSongObj', ps);
+      this.searchData.song = this.$store.getters.songObj.name;
+      this.searchData.artist = this.$store.getters.songObj.Artist;
+      await this.pullLyrics(ps.url); // pulls lyrics and stores in results
     },
     onReset() {
       this.searchData.song = null;
@@ -290,7 +283,7 @@ export default {
         //console.log('updated - ', this.$store.getters.currentLyrics);
       } catch (e) {
         // show crashed message
-        console.error(e);
+        //console.error(e);
       }
     },
     parseJwt(token) {
