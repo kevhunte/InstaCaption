@@ -210,13 +210,17 @@ export default {
       // if we get here we have to call API to get it
 
       //cleanse out characters in artist and song
-      const song = this.searchData.song.replace(/[^a-zA-Z0-9\d\s]+/g, "");
+      let song = this.searchData.song.replace(/[^a-zA-Z0-9\d\s]+/g, "");
 
-      const artist = this.searchData.artist.trim(); //.replace(/[^a-zA-Z0-9\d\s]+/g, "");
+      let artist = this.searchData.artist.trim(); //.replace(/[^a-zA-Z0-9\d\s]+/g, "");
 
-      //console.log('sending ', song, 'by', artist);
+      if (!song.trim() || !artist.trim()) {
+        this.loading = false;
+        return;
+      }
       try {
 
+        //console.log('sending ', song, 'by', artist);
         const result = await this.fetchSongData(song, artist, this.accessToken);
 
         //this.loading = false;
@@ -255,11 +259,14 @@ export default {
     pullLyrics(url) {
       //let lyrics = null;
       const proxy = 'https://cors-anywhere.herokuapp.com/';
+      const proxy2 = 'https://thingproxy.freeboard.io/fetch/';
       let arr = []
       try {
         // start loading
         request(proxy + url, function(error, response, body) {
-          if (error) throw new Error(error);
+          if (error) {
+            throw new Error(error);
+          }
           //console.log('got webpage');
           //console.log(body);
           //parse body
@@ -283,7 +290,11 @@ export default {
         //console.log('updated - ', this.$store.getters.currentLyrics);
       } catch (e) {
         // show crashed message
-        //console.error(e);
+        console.error(e);
+      } finally {
+        if (!this.$store.getters.currentLyrics) {
+          this.UXmessage = 'Sorry, something came up when getting the lyrics for this song :(';
+        }
       }
     },
     parseJwt(token) {
